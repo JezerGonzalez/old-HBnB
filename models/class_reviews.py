@@ -13,21 +13,26 @@ class Review:
     @property
     def id(self):
         return self.__id
+        return self.__id
 
     @property
     def user_name(self):
+        return self.__user_name
         return self.__user_name
 
     @property
     def review_text(self):
         return self.__review_text
+        return self.__review_text
 
     @property
     def created(self):
         return self.__created
+        return self.__created
 
     @property
     def updated(self):
+        return self.__updated
         return self.__updated
 
     # Setters
