@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-from models import User, Place, Review, Amenity, City, Country
+from models import User, Places, Review, Amenity, City, Country
 
 
 def main():
@@ -19,7 +19,7 @@ def main():
                   first_name="Juan", last_name="Mendez")
 
     # Create a place
-    rancho = Place(
+    rancho = Places(
         name="Rancho Rico",
         description="Rancho lejos de todos. Perfecto para relajarte",
         address="carr #149 km 1.5",
