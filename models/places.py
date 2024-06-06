@@ -27,12 +27,22 @@ class Places:
         self.__amenities = []
         self.__reviews = []
 
+    @property
+    def review(self):
+        """Getter for review"""
+        return self.__reviews
+
     def add_review(self, review):
         """Add a review to the list of reviews"""
         if not isinstance(review, Review):
             raise TypeError("review must be an instance of Review")
         self.__reviews.append(review)
-        self.__updated = datetime.now().strftime("%b/%d/%y %I:%M %p")
+        self.__updated_at = datetime.datetime.now().strftime("%b/%d/%y %I:%M %p")
+
+    @property
+    def amenities(self):
+        """Getter for amenities"""
+        return self.__amenities
 
     def add_amenity(self, amenity):
         """Add an amenity to the list of amenities"""

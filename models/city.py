@@ -9,6 +9,36 @@ class City:
     def __init__(self, name):
         """Init method"""
         self.name = name
+        self.__id = str(uuid.uuid4())
+        self.__created_at = datetime.datetime.now().strftime("%b/%d/%y %I:%M %p")
+        self.__updated_at = self.__created_at
+        self.country = None
+
+    @property
+    def country(self):
+        """Return country"""
+        return self.__country
+
+    @country.setter
+    def country(self, value):
+        """Set country"""
+        self.__country = value
+        self.__updated_at = datetime.datetime.now().strftime("%b/%d/%y %I:%M %p")
+
+    @property
+    def id(self):
+        """Return id"""
+        return self.__id
+
+    @property
+    def created_at(self):
+        """Return created_at"""
+        return self.__created_at
+
+    @property
+    def updated_at(self):
+        """Return updated_at"""
+        return self.__updated_at
 
     @property
     def name(self):

@@ -23,7 +23,7 @@ def main():
         name="Rancho Rico",
         description="Rancho lejos de todos. Perfecto para relajarte",
         address="carr #149 km 1.5",
-        city_id=villalba.id,
+        city=villalba.id,
         latitude=40.7128,
         longitude=-74.0060,
         rooms=2,
@@ -42,7 +42,7 @@ def main():
     rancho.add_amenity(wifi)
 
     # Create a review
-    review = Review(user_id=juanjo.id, place_id=rancho.id, text="Bello!")
+    review = Review(user_id=juanjo.id, place_id=rancho.id, text="Bello!", rating=3.5)
 
     # Add the review to the place
     rancho.add_review(review)
@@ -54,9 +54,9 @@ def main():
     print(f"Country: {puertorico.name}, City: {villalba.name}")
     print(f"{charlie.first_name} {charlie.last_name}, Email: {charlie.email}")
     print(f"ID: {charlie.id}, Owns: {charlie.places[0].name}")
-    print(f"Place: {rancho.name}, Host ID: {rancho.host_id}, Host Name: {rancho.host}")
+    print(f"Place: {rancho.name}, Host ID: {rancho.host_id}, Host Name: {rancho.host_name}")
     print(f"Amenity: {rancho.amenities[0].name}")
-    print(f"{rancho.reviews[0].user_name} said: {rancho.reviews[0].text}")
+    print(f"{rancho.review[0].user_name} said: {rancho.review[0].text}")
 
 
 if __name__ == "__main__":

@@ -7,7 +7,6 @@ class Country:
         """Initialize with a name"""
         self.name = name
         self.cities = []
-        self.__cities = []
 
     def add_city(self, city):
         """Add a city"""
@@ -28,4 +27,3 @@ class Country:
         if not value.strip():
             raise ValueError("The name cannot be blank")
         self.__name = value
-
