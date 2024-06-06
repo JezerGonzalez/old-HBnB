@@ -24,7 +24,7 @@ class User:
         self.__places.append(place)
         place.host_id = self.__id
         place.host_name = self.__first_name + " " + self.__last_name
-        place.updated = datetime.datetime.now().strftime("%b/%d/%y %I:%M %p")
+        place.__updated = datetime.datetime.now().strftime("%b/%d/%y %I:%M %p")
 
     @property
     def id(self):
@@ -54,7 +54,7 @@ class User:
         if len(first_name) == 0:
             raise ValueError("Name must not be empty")
         self.__first_name = first_name
-        self.updated = datetime.datetime.now().strftime("%b/%d/%y %I:%M %p")
+        self.__updated = datetime.datetime.now().strftime("%b/%d/%y %I:%M %p")
     @property
     def last_name(self):
         """Getter for last name"""
@@ -68,7 +68,7 @@ class User:
         if len(last_name) == 0:
             raise ValueError("Last name must not be empty")
         self.__last_name = last_name
-        self.updated = datetime.datetime.now().strftime("%b/%d/%y %I:%M %p")
+        self.__updated = datetime.datetime.now().strftime("%b/%d/%y %I:%M %p")
     @property
     def email(self):
         """Email Getter"""
@@ -82,7 +82,7 @@ class User:
         if len(email) == 0:
             raise ValueError("Email must not be empty")
         self.__email = email
-        self.updated = datetime.datetime.now().strftime("%b/%d/%y %I:%M %p")
+        self.__updated = datetime.datetime.now().strftime("%b/%d/%y %I:%M %p")
 
     @property
     def password(self):
@@ -97,4 +97,4 @@ class User:
         if len(password) == 0:
             raise ValueError("Password must not be empty")
         self.__password = password
-        self.updated = datetime.datetime.now().strftime("%b/%d/%y %I:%M %p")
+        self.__updated = datetime.datetime.now().strftime("%b/%d/%y %I:%M %p")

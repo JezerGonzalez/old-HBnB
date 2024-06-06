@@ -10,8 +10,8 @@ class Amenity:
         """Init method"""
         self.name = name
         self.id = uuid.uuid4()
-        self.created_at = datetime.datetime.now()
-        self.updated_at = datetime.datetime.now()
+        self.created_at = datetime.datetime.now().strftime("%b/%d/%y %I:%M %p")
+        self.updated_at = self.created_at
 
     @property
     def id(self):
@@ -33,3 +33,4 @@ class Amenity:
             raise ValueError("name can't be empty")
         if not value.isalpha():
             raise ValueError("name must contain only letters")
+        self.__updated_at = datetime.datetime.now().strftime("%b/%d/%y %I:%M %p")

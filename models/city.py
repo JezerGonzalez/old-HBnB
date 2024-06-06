@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 """Creating class city"""
+import datetime
+import uuid
 
 
 class City:
@@ -23,6 +25,7 @@ class City:
             raise ValueError("name can't be empty")
         if not value.isalpha():
             raise ValueError("name must contain only letters")
+        self.__updated_at = datetime.datetime.now().strftime("%b/%d/%y %I:%M %p")
 
     def __str__(self):
         """Return string"""
