@@ -22,6 +22,8 @@ class Places:
         self.__id = str(uuid.uuid4())
         self.__host_id = None
         self.__host_name = None
+        self.__amenities = []
+        self.__reviews = []
 
     @property
     def host_name(self):

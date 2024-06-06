@@ -23,6 +23,7 @@ class User:
             raise TypeError("place must be an instance of Place")
         self.__places.append(place)
         place.host_id = self.__id
+        place.host_name = self.__first_name + " " + self.__last_name
         place.updated = datetime.datetime.now().strftime("%b/%d/%y %I:%M %p")
 
     @property
