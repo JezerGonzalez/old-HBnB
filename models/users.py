@@ -1,6 +1,7 @@
 #!/usr/python3
 """User class for the HBnB Evolution project"""
-import uuid, datetime
+import uuid
+from datetime import datetime
 from .places import Places
 from .class_reviews import Review
 
@@ -8,7 +9,9 @@ from .class_reviews import Review
 class User:
     """Class defining any HBnB users"""
     emails = []
+
     def __init__(self, first_name, last_name, email, password):
+
         self.__first_name = first_name
         self.__last_name = last_name
         if email in User.emails:
@@ -16,7 +19,7 @@ class User:
         User.emails.append(email)
         self.__email = email
         self.__password = password
-        self.__created = datetime.datetime.now().strftime("%b/%d/%y %I:%M %p")
+        self.__created = datetime.now().strftime("%b/%d/%y %I:%M %p")
         self.__updated = self. created
         self.__id = str(uuid.uuid4())
         self.__places = []
@@ -33,7 +36,7 @@ class User:
             raise TypeError("review must be an instance of Review")
         self.__review.append(review)
         review.user_name = self.__first_name + " " + self.__last_name
-        review.__updated = datetime.datetime.now().strftime("%b/%d/%y %I:%M %p")
+        review.__updated = datetime.now().strftime("%b/%d/%y %I:%M %p")
 
     @property
     def places(self):
@@ -47,7 +50,7 @@ class User:
         self.places.append(place)
         place.host_id = self.__id
         place.host_name = self.__first_name + " " + self.__last_name
-        place.__updated = datetime.datetime.now().strftime("%b/%d/%y %I:%M %p")
+        place.__updated = datetime.now().strftime("%b/%d/%y %I:%M %p")
 
     @property
     def id(self):
@@ -77,7 +80,8 @@ class User:
         if len(first_name) == 0:
             raise ValueError("Name must not be empty")
         self.__first_name = first_name
-        self.__updated = datetime.datetime.now().strftime("%b/%d/%y %I:%M %p")
+        self.__updated = datetime.now().strftime("%b/%d/%y %I:%M %p")
+
     @property
     def last_name(self):
         """Getter for last name"""
@@ -91,7 +95,8 @@ class User:
         if len(last_name) == 0:
             raise ValueError("Last name must not be empty")
         self.__last_name = last_name
-        self.__updated = datetime.datetime.now().strftime("%b/%d/%y %I:%M %p")
+        self.__updated = datetime.now().strftime("%b/%d/%y %I:%M %p")
+
     @property
     def email(self):
         """Email Getter"""
@@ -105,7 +110,7 @@ class User:
         if len(email) == 0:
             raise ValueError("Email must not be empty")
         self.__email = email
-        self.__updated = datetime.datetime.now().strftime("%b/%d/%y %I:%M %p")
+        self.__updated = datetime.now().strftime("%b/%d/%y %I:%M %p")
 
     @property
     def password(self):
@@ -120,4 +125,4 @@ class User:
         if len(password) == 0:
             raise ValueError("Password must not be empty")
         self.__password = password
-        self.__updated = datetime.datetime.now().strftime("%b/%d/%y %I:%M %p")
+        self.__updated = datetime.now().strftime("%b/%d/%y %I:%M %p")

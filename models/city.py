@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """Creating class city"""
-import datetime
+from datetime import datetime
 import uuid
 
 
@@ -10,7 +10,7 @@ class City:
         """Init method"""
         self.name = name
         self.__id = str(uuid.uuid4())
-        self.__created_at = datetime.datetime.now().strftime("%b/%d/%y %I:%M %p")
+        self.__created_at = datetime.now().strftime("%b/%d/%y %I:%M %p")
         self.__updated_at = self.__created_at
         self.country = None
 
@@ -23,7 +23,7 @@ class City:
     def country(self, value):
         """Set country"""
         self.__country = value
-        self.__updated_at = datetime.datetime.now().strftime("%b/%d/%y %I:%M %p")
+        self.__updated_at = datetime.now().strftime("%b/%d/%y %I:%M %p")
 
     @property
     def id(self):
@@ -55,7 +55,7 @@ class City:
             raise ValueError("name can't be empty")
         if not value.isalpha():
             raise ValueError("name must contain only letters")
-        self.__updated_at = datetime.datetime.now().strftime("%b/%d/%y %I:%M %p")
+        self.__updated_at = datetime.now().strftime("%b/%d/%y %I:%M %p")
 
     def __str__(self):
         """Return string"""

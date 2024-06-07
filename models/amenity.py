@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """Creating class amenities"""
 import uuid
-import datetime
+from datetime import datetime
 
 
 class Amenity:
@@ -10,7 +10,7 @@ class Amenity:
         """Init method"""
         self.__name = name
         self.__id = uuid.uuid4()
-        self.__created_at = datetime.datetime.now().strftime("%b/%d/%y %I:%M %p")
+        self.__created_at = datetime.now().strftime("%b/%d/%y %I:%M %p")
         self.__updated_at = self.created_at
 
     @property
@@ -36,10 +36,9 @@ class Amenity:
     @name.setter
     def name(self, value):
         """Set name"""
-        
         if not isinstance(value, str):
             raise TypeError("name must be a string")
         if not value:
             raise ValueError("name can't be empty")
         self.__name = value
-        self.__updated_at = datetime.datetime.now().strftime("%b/%d/%y %I:%M %p")
+        self.__updated_at = datetime.now().strftime("%b/%d/%y %I:%M %p")

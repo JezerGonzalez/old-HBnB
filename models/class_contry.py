@@ -1,8 +1,9 @@
 from .city import City
 
+
 class Country:
     """Defines a country"""
-    
+
     def __init__(self, name):
         """Initialize with a name"""
         self.name = name

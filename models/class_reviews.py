@@ -1,6 +1,7 @@
 import uuid
 from datetime import datetime
 
+
 class Review:
     def __init__(self, text, rating, user_id, place_id):
         self.__id = str(uuid.uuid4())  # Genera un ID único
