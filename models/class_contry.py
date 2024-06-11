@@ -28,3 +28,28 @@ class Country:
         if not value.strip():
             raise ValueError("The name cannot be blank")
         self.__name = value
+
+    @classmethod
+    def create(cls, name):
+        """Create a new country"""
+        country = cls(name)
+        cls.DataManager.save(country)
+        return country
+
+    @classmethod
+    def get(cls, name):
+        """Get a specific country by name"""
+        return cls.DataManager.get(name, "Country")
+
+    def update(self):
+        """Update country data"""
+        self.DataManager.update(self)
+
+    def delete(self):
+        """Delete country"""
+        self.DataManager.delete(self.__name, "Country")
+
+    @classmethod
+    def all(cls):
+        """Retrieve all countries"""
+        return cls.DataManager.all("Country")

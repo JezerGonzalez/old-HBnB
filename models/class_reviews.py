@@ -74,3 +74,23 @@ class Review:
     def user_name(self, value):
         self.__user_name = value
         self.__updated = datetime.now().strftime("%b/%d/%y %I:%M %p")
+
+    @classmethod
+    def create(cls, user_id, place_id, rating, text):
+        """create new review"""
+        review = cls(user_id, place_id, rating, text)
+        cls.DataManager.save(review)
+        return review
+
+    @classmethod
+    def get(cls, review_id):
+        """get review by id"""
+        return cls.DataManager.get(review_id, "Review")
+
+    def update(self):
+        """update review data"""
+        self.DataManager.update(self)
+
+    def delete(self):
+        """delete review data"""
+        self.DataManager.delete(self.id, "Review")

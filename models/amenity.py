@@ -2,6 +2,7 @@
 """Creating class amenities"""
 import uuid
 from datetime import datetime
+from persistence.DataManager import DataManager
 
 
 class Amenity:
@@ -42,3 +43,28 @@ class Amenity:
             raise ValueError("name can't be empty")
         self.__name = value
         self.__updated_at = datetime.now().strftime("%b/%d/%y %I:%M %p")
+
+    @classmethod
+    def create(cls, name):
+        """Create a new amenity"""
+        amenity = cls(name)
+        cls.data_manager.save(amenity)
+        return amenity
+
+    @classmethod
+    def get(cls, amenity_id):
+        """Get a specific amenity by ID"""
+        return cls.data_manager.get(amenity_id, "Amenity")
+
+    def update(self):
+        """Update amenity data"""
+        self.data_manager.update(self)
+
+    def delete(self):
+        """Delete amenity"""
+        self.data_manager.delete(self.id, "Amenity")
+
+    @classmethod
+    def all(cls):
+        """retrieve all amenities"""
+        return cls.data_manager.all("Amenity")

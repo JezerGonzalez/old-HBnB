@@ -2,6 +2,7 @@
 """Creating class city"""
 from datetime import datetime
 import uuid
+from persistence.DataManager import DataManager
 
 
 class City:
@@ -64,3 +65,28 @@ class City:
     def __repr__(self):
         """Return string"""
         return self.__str__
+
+    @classmethod
+    def create(cls, name):
+        """Create a new city"""
+        city = cls(name)
+        cls.data_manager.save(city)
+        return city
+
+    @classmethod
+    def get(cls, city_id):
+        """Get a specific city by ID"""
+        return cls.data_manager.get(city_id, "City")
+
+    def update(self):
+        """Update city data"""
+        self.data_manager.update(self)
+
+    def delete(self):
+        """Delete city"""
+        self.data_manager.delete(self.id, "City")
+
+    @classmethod
+    def all(cls):
+        """Retrieve all cities"""
+        return cls.data_manager.all("City")

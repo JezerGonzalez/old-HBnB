@@ -4,6 +4,7 @@ import uuid
 from datetime import datetime
 from .places import Places
 from .class_reviews import Review
+from persistence.DataManager import DataManager
 
 
 class User:
@@ -126,3 +127,28 @@ class User:
             raise ValueError("Password must not be empty")
         self.__password = password
         self.__updated = datetime.now().strftime("%b/%d/%y %I:%M %p")
+
+    @classmethod
+    def create(cls, first_name, last_name, email, password):
+        """Creates a new user"""
+        new_user = cls(first_name, last_name, email, password)
+        cls.DataManager.save(new_user)
+        return new_user
+
+    @classmethod
+    def get(cls, user_id):
+        """Gets a user by id"""
+        cls.DataManager.get(user_id, "User")
+
+    def update(self):
+        """Updates a user"""
+        self.DataManager.update(self)
+
+    def delete(self):
+        """Deletes a user"""
+        self.DataManager.delete(self.id, "User")
+
+    @classmethod
+    def all(cls):
+        """Returns all users"""
+        return cls.DataManager.all("User")

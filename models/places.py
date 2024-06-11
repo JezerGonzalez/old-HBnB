@@ -3,6 +3,7 @@ import uuid
 from datetime import datetime
 from .amenity import Amenity
 from .class_reviews import Review
+from persistence.DataManager import DataManager
 
 
 class Places:
@@ -238,3 +239,28 @@ class Places:
             raise ValueError("Max guests must be a more than 0")
         self.__max_guests = max_guests
         self.__updated_at = datetime.now().strftime("%b/%d/%y %I:%M %p")
+
+    @classmethod
+    def create(cls, name, description, location):
+        """Create a new place"""
+        place = cls(name, description, location)
+        cls.DataManager.save(place)
+        return place
+
+    @classmethod
+    def get(cls, place_id):
+        """Get a specific place"""
+        return cls.DataManager.get(place_id, "Place")
+
+    def update(self):
+        """Update place data"""
+        self.DataManager.update(self)
+
+    def delete(self):
+        """Delete place data"""
+        self.DataManager.delete(self.id, "Place")
+
+    @classmethod
+    def all(cls):
+        """Get all places"""
+        return cls.DataManager.all("Place")
