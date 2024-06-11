@@ -94,3 +94,8 @@ class Review:
     def delete(self):
         """delete review data"""
         self.DataManager.delete(self.id, "Review")
+
+    @classmethod
+    def all(cls):
+        """Get all reviews"""
+        return cls.DataManager.all("Review")
