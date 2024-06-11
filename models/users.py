@@ -21,7 +21,7 @@ class User:
         self.__email = email
         self.__password = password
         self.__created = datetime.now().strftime("%b/%d/%y %I:%M %p")
-        self.__updated = self. created
+        self.__updated = self.__created
         self.__id = str(uuid.uuid4())
         self.__places = []
         self.__review = []
