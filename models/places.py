@@ -174,7 +174,7 @@ class Places:
     def city_id(self, city_id):
         """Setter for city"""
         if not city_id or len(city_id) == 0:
-            raise TypeError("City ID must be a string") 
+            raise ValueError("City id must not be empty") 
         self.__city_id = city_id
         self.__updated_at = datetime.now().strftime("%b/%d/%y %I:%M %p")
 
