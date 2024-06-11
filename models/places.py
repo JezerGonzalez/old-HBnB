@@ -10,13 +10,13 @@ class Places:
     """Class that defines a list of Places for HBnB"""
 
     def __init__(self, name, description, address, latitude,
-                 longitude, city, rooms, bathrooms, price, max_guests):
+                 longitude, city_id, rooms, bathrooms, price, max_guests):
         self.__name = name
         self.__description = description
         self.__address = address
         self.__latitude = latitude
         self.__longitude = longitude
-        self.__city = city
+        self.__city_id = city_id
         self.__rooms = rooms
         self.__bathrooms = bathrooms
         self.__price = price
@@ -166,18 +166,16 @@ class Places:
         self.__updated_at = datetime.now().strftime("%b/%d/%y %I:%M %p")
 
     @property
-    def city(self):
+    def city_id(self):
         """Getter for city"""
-        return self.__city
+        return self.__city_id
 
-    @city.setter
-    def city(self, city):
+    @city_id.setter
+    def city_id(self, city_id):
         """Setter for city"""
-        if type(city) is not str:
-            raise TypeError("City must be a string")
-        if len(city) == 0:
-            raise ValueError("City must be a string")
-        self.__city = city
+        if not city_id or len(city_id) == 0:
+            raise TypeError("City ID must be a string") 
+        self.__city_id = city_id
         self.__updated_at = datetime.now().strftime("%b/%d/%y %I:%M %p")
 
     @property
