@@ -17,3 +17,7 @@ class IPersistenceManager(ABC):
     @abstractmethod
     def delete(self, entity_id, entity_type):
         pass
+
+    @abstractmethod
+    def all(self, entity_type):
+        pass
