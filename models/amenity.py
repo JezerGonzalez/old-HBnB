@@ -68,3 +68,12 @@ class Amenity:
     def all(cls):
         """retrieve all amenities"""
         return cls.data_manager.all("Amenity")
+
+    def to_dict(self):
+        """Return a dictionary representation of an amenity"""
+        return {
+            "id": self.__id,
+            "created_at": self.__created_at,
+            "updated_at": self.__updated_at,
+            "name": self.__name,
+        }

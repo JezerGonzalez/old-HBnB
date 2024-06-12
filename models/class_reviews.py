@@ -1,8 +1,12 @@
 import uuid
 from datetime import datetime
+from persistence.DataManager import DataManager
 
 
 class Review:
+    """"Review class"""
+    DataManager = DataManager()
+
     def __init__(self, text, rating, user_id, place_id):
         self.__id = str(uuid.uuid4())  # Genera un ID único
         self.__text = text
@@ -99,3 +103,15 @@ class Review:
     def all(cls):
         """Get all reviews"""
         return cls.DataManager.all("Review")
+
+    def to_dict(self):
+        """Returns a dictionary representation of a review"""
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "place_id": self.place_id,
+            "text": self.text,
+            "rating": self.rating,
+            "created_at": self.created,
+            "updated_at": self.updated,
+        }

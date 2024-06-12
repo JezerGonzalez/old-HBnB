@@ -262,3 +262,23 @@ class Places:
     def all(cls):
         """Get all places"""
         return cls.DataManager.all("Place")
+
+    def to_dict(self):
+        """Convert place to dictionary"""
+        return {
+            "id": self.__id,
+            "created_at": self.__created_at,
+            "updated_at": self.__updated_at,
+            "name": self.__name,
+            "description": self.__description,
+            "number_rooms": self.__rooms,
+            "number_bathrooms": self.__bathrooms,
+            "max_guests": self.__max_guests,
+            "price_by_night": self.__price,
+            "latitude": self.__latitude,
+            "longitude": self.__longitude,
+            "amenity_ids": [amenity.to_dict() for amenity in self.__amenities],
+            "user_id": self.__host_id,
+            "city_id": self.__city_id,
+            "reviews": [review.to_dict() for review in self.__reviews]
+        }

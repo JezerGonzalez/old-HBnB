@@ -90,3 +90,13 @@ class City:
     def all(cls):
         """Retrieve all cities"""
         return cls.data_manager.all("City")
+
+    def to_dict(self):
+        """Return a dictionary representation of a city"""
+        return {
+            "id": self.__id,
+            "created_at": self.__created_at,
+            "updated_at": self.__updated_at,
+            "name": self.__name,
+            "country_id": self.__country.id
+        }

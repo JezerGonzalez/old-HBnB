@@ -1,8 +1,10 @@
 from .city import City
-
+from persistence.DataManager import DataManager
 
 class Country:
     """Defines a country"""
+    countries = []
+    DataManager = DataManager()
 
     def __init__(self, name):
         """Initialize with a name"""
@@ -53,3 +55,10 @@ class Country:
     def all(cls):
         """Retrieve all countries"""
         return cls.DataManager.all("Country")
+
+    def to_dict(self):
+        """Return a dictionary representation of the country"""
+        return {
+            "name": self.__name,
+            "cities": [city.to_dict() for city in self.cities]
+        }
