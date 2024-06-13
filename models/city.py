@@ -7,23 +7,25 @@ from persistence.DataManager import DataManager
 
 class City:
     """City class"""
-    def __init__(self, name):
+    DataManager = DataManager
+
+    def __init__(self, name, country_code):
         """Init method"""
         self.name = name
         self.__id = str(uuid.uuid4())
         self.__created_at = datetime.now().strftime("%b/%d/%y %I:%M %p")
         self.__updated_at = self.__created_at
-        self.country = None
+        self.__country_code = country_code
 
     @property
-    def country(self):
+    def country_code(self):
         """Return country"""
-        return self.__country
+        return self.__counytry_code
 
-    @country.setter
-    def country(self, value):
+    @country_code.setter
+    def country_code(self, value):
         """Set country"""
-        self.__country = value
+        self.__counytry_code = value
         self.__updated_at = datetime.now().strftime("%b/%d/%y %I:%M %p")
 
     @property
@@ -58,38 +60,30 @@ class City:
             raise ValueError("name must contain only letters")
         self.__updated_at = datetime.now().strftime("%b/%d/%y %I:%M %p")
 
-    def __str__(self):
-        """Return string"""
-        return self.name
-
-    def __repr__(self):
-        """Return string"""
-        return self.__str__
-
     @classmethod
-    def create(cls, name):
+    def create(cls, name, country_code):
         """Create a new city"""
-        city = cls(name)
-        cls.data_manager.save(city)
+        city = cls(name, country_code)
+        cls.DataManager.save(city)
         return city
 
     @classmethod
     def get(cls, city_id):
         """Get a specific city by ID"""
-        return cls.data_manager.get(city_id, "City")
+        return cls.DataManager.get(city_id, "City")
 
     def update(self):
         """Update city data"""
-        self.data_manager.update(self)
+        self.DataManager.update(self)
 
     def delete(self):
         """Delete city"""
-        self.data_manager.delete(self.id, "City")
+        self.DataManager.delete(self.id, "City")
 
     @classmethod
     def all(cls):
         """Retrieve all cities"""
-        return cls.data_manager.all("City")
+        return cls.DataManager.all("City")
 
     def to_dict(self):
         """Return a dictionary representation of a city"""
@@ -98,5 +92,5 @@ class City:
             "created_at": self.__created_at,
             "updated_at": self.__updated_at,
             "name": self.__name,
-            "country_id": self.__country.id
+            "country_id": self.__counytry_code
         }
