@@ -9,7 +9,6 @@ class DataManager(IPersistenceManager):
         self.storage = {
             "User": {},
             "City": {},
-            "Country": {},
             "Amenity": {},
             "Place": {},
             "Review": {},
@@ -20,10 +19,7 @@ class DataManager(IPersistenceManager):
         data_type = type(entity).__name__
         if data_type not in self.storage:
             raise ValueError(f"Invalid data type: {data_type}")
-        if data_type == "Country":
-            self.storage["Country"][entity.name] = entity
-        else:
-            self.storage[data_type][entity.id] = entity
+        self.storage[data_type][entity.id] = entity
 
     def get(self, entity_id, entity_type):
         """Get the data for a given entity"""
@@ -36,16 +32,10 @@ class DataManager(IPersistenceManager):
         data_type = type(entity).__name__
         if data_type not in self.storage:
             raise ValueError(f"Invalid data type: {data_type}")
-        if data_type == "Country":
-            if entity.name in self.storage["Country"]:
-                self.storage["Country"][entity.name] = entity
-            else:
-                raise ValueError(f"Country {entity.name} does not exist")
+        if entity.id in self.storage[data_type]:
+            self.storage[data_type][entity.id] = entity
         else:
-            if entity.id in self.storage[data_type]:
-                self.storage[data_type][entity.id] = entity
-            else:
-                raise ValueError(f"Entity {entity} does not exist")
+            raise ValueError(f"Entity {entity} does not exist")
 
     def delete(self, entity_id, entity_type):
         """Delete a entity from the database"""
@@ -54,7 +44,7 @@ class DataManager(IPersistenceManager):
         if entity_id in self.storage[entity_type]:
             del self.storage[entity_type][entity_id]
         else:
-            raise ValueError(f"Entity {entity_id} does not exist")
+            raise ValueError(f"Entity {entity_type} does not exist")
 
     def all_entities(self, entity_type):
         """Returns a list of all entities"""
