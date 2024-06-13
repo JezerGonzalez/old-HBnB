@@ -1,22 +1,33 @@
 #!/usr/bin/python3
 """Creating class amenities"""
 import uuid
-import datetime
+from datetime import datetime
+from persistence.DataManager import DataManager
 
 
 class Amenity:
     """"Amenity class"""
     def __init__(self, name, id=None):
         """Init method"""
-        self.name = name
-        self.id = uuid.uuid4()
-        self.created_at = datetime.datetime.now().strftime("%b/%d/%y %I:%M %p")
-        self.updated_at = self.created_at
+        self.__name = name
+        self.__id = uuid.uuid4()
+        self.__created_at = datetime.now().strftime("%b/%d/%y %I:%M %p")
+        self.__updated_at = self.created_at
 
     @property
     def id(self):
         """Return id"""
         return self.__id
+
+    @property
+    def created_at(self):
+        """Return created_at"""
+        return self.__created_at
+
+    @property
+    def updated_at(self):
+        """Return updated_at"""
+        return self.__updated_at
 
     @property
     def name(self):
@@ -26,11 +37,43 @@ class Amenity:
     @name.setter
     def name(self, value):
         """Set name"""
-        self.__name = value
         if not isinstance(value, str):
             raise TypeError("name must be a string")
         if not value:
             raise ValueError("name can't be empty")
-        if not value.isalpha():
-            raise ValueError("name must contain only letters")
-        self.__updated_at = datetime.datetime.now().strftime("%b/%d/%y %I:%M %p")
+        self.__name = value
+        self.__updated_at = datetime.now().strftime("%b/%d/%y %I:%M %p")
+
+    @classmethod
+    def create(cls, name):
+        """Create a new amenity"""
+        amenity = cls(name)
+        cls.data_manager.save(amenity)
+        return amenity
+
+    @classmethod
+    def get(cls, amenity_id):
+        """Get a specific amenity by ID"""
+        return cls.data_manager.get(amenity_id, "Amenity")
+
+    def update(self):
+        """Update amenity data"""
+        self.data_manager.update(self)
+
+    def delete(self):
+        """Delete amenity"""
+        self.data_manager.delete(self.id, "Amenity")
+
+    @classmethod
+    def all(cls):
+        """retrieve all amenities"""
+        return cls.data_manager.all("Amenity")
+
+    def to_dict(self):
+        """Return a dictionary representation of an amenity"""
+        return {
+            "id": self.__id,
+            "created_at": self.__created_at,
+            "updated_at": self.__updated_at,
+            "name": self.__name,
+        }
