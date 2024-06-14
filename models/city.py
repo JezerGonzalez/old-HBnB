@@ -56,34 +56,7 @@ class City(DataManager):
             raise TypeError("name must be a string")
         if not value:
             raise ValueError("name can't be empty")
-        if not value.isalpha():
-            raise ValueError("name must contain only letters")
         self.__updated_at = datetime.now().strftime("%b/%d/%y %I:%M %p")
-
-    @classmethod
-    def create(cls, name, country_code):
-        """Create a new city"""
-        city = cls(name, country_code)
-        cls.DataManager.save(city)
-        return city
-
-    @classmethod
-    def get(cls, city_id):
-        """Get a specific city by ID"""
-        return cls.DataManager.get(city_id, "City")
-
-    def update(self):
-        """Update city data"""
-        self.DataManager.update(self)
-
-    def delete(self):
-        """Delete city"""
-        self.DataManager.delete(self.id, "City")
-
-    @classmethod
-    def all(cls):
-        """Retrieve all cities"""
-        return cls.DataManager.all("City")
 
     def to_dict(self):
         """Return a dictionary representation of a city"""
