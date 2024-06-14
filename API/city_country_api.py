@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, abort
-from class_country import Country, City
-
+from models.class_country import Country
+from models.city import City
 
 app = Flask('city_country')
 
@@ -36,7 +36,3 @@ def get_city_by_id(city_id):
     if city is None:
         abort(404, description="City not found.")
     return jsonify({'city': city})
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
