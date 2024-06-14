@@ -3,7 +3,7 @@ from datetime import datetime
 from persistence.DataManager import DataManager
 
 
-class Review:
+class Review(DataManager):
     """"Review class"""
 
     def __init__(self, text, rating, user_id, place_id):
@@ -12,7 +12,6 @@ class Review:
         self.__rating = rating
         self.__place_id = place_id
         self.__user_id = user_id
-        self.__user_name = None
         self.__created = datetime.now().strftime("%b/%d/%y %I:%M %p")
         self.__updated = self.__created
 
@@ -20,10 +19,6 @@ class Review:
     @property
     def id(self):
         return self.__id
-
-    @property
-    def user_name(self):
-        return self.__user_name
 
     @property
     def created(self):
@@ -49,12 +44,6 @@ class Review:
     def user_id(self):
         return self.__user_id
 
-    # Setters
-    @user_name.setter
-    def user_name(self, value):
-        self.__user_name = value
-        self.__updated = datetime.now().strftime("%b/%d/%y %I:%M %p")
-
     @rating.setter
     def rating(self, value):
         if type(value) is not int:
@@ -72,36 +61,6 @@ class Review:
             raise ValueError("text cannot be empty")
         self.__text = value
         self.__updated = datetime.now().strftime("%b/%d/%y %I:%M %p")
-
-    @user_name.setter
-    def user_name(self, value):
-        self.__user_name = value
-        self.__updated = datetime.now().strftime("%b/%d/%y %I:%M %p")
-
-    @classmethod
-    def create(cls, user_id, place_id, rating, text):
-        """create new review"""
-        review = cls(user_id, place_id, rating, text)
-        cls.DataManager.save(review)
-        return review
-
-    @classmethod
-    def get(cls, review_id):
-        """get review by id"""
-        return cls.DataManager.get(review_id, "Review")
-
-    def update(self):
-        """update review data"""
-        self.DataManager.update(self)
-
-    def delete(self):
-        """delete review data"""
-        self.DataManager.delete(self.id, "Review")
-
-    @classmethod
-    def all(cls):
-        """Get all reviews"""
-        return cls.DataManager.all("Review")
 
     def to_dict(self):
         """Returns a dictionary representation of a review"""
