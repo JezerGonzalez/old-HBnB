@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request, abort
 from models.class_reviews import Review
-from models.places import Place
+from models.places import Places
 from models.users import User
 
 
@@ -10,9 +10,9 @@ review_bp = Blueprint("review", __name__)
 @review_bp.route("/places/<place_id>/reviews", methods=["POST"])
 def create_review(place_id):
     """Creates a new review"""
-    place = Place.get(place_id)
+    place = Places.get(place_id)
     if place is None:
-        abort(404, description="Place not found")
+        abort(404, description="Places not found")
     data = request.json
     if data is None:
         abort(400, description="Missing data")
@@ -65,11 +65,11 @@ def delete_review(review_id):
 @review_bp.route("/places/<place_id>/reviews", methods=["GET"])
 def get_place_reviews(place_id):
     """Retrieve all reviews for a specific place"""
-    place = Place.get(place_id)
+    place = Places.get(place_id)
     if place is None:
-        abort(404, description="Place not found")
+        abort(404, description="Places not found")
     if place.reviews is None:
-        abort(404, description="Place has no reviews")
+        abort(404, description="Places has no reviews")
     place_reviews = [review.to_dict() for review in place.reviews]
     return jsonify(place_reviews), 200
 

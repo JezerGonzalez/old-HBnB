@@ -3,6 +3,7 @@ from .user_ep import user_bp
 from .place_ep import place_bp
 from .review_ep import review_bp
 from .amenity_ep import amenity_bp
+from .city_country_api import app
 
 def create_app():
     app = Flask("HBnB")
@@ -16,5 +17,7 @@ def create_app():
     app.register_blueprint(place_bp)
     app.register_blueprint(review_bp)
     app.register_blueprint(amenity_bp)
+    app.register_blueprint(app)
+
 
     return app

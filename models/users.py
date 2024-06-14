@@ -7,7 +7,7 @@ from .class_reviews import Review
 from persistence.DataManager import DataManager
 
 
-class User:
+class User(DataManager):
     """Class defining any HBnB users"""
     emails = []
 
@@ -23,35 +23,22 @@ class User:
         self.__created = datetime.now().strftime("%b/%d/%y %I:%M %p")
         self.__updated = self.__created
         self.__id = str(uuid.uuid4())
-        self.__places = []
-        self.__review = []
-
-    @property
-    def review(self):
-        """Getter for review"""
-        return self.__review
+        self.places = []
+        self.review = []
 
     def add_review(self, review):
         """Adds a review to the list of reviews"""
         if not isinstance(review, Review):
             raise TypeError("review must be an instance of Review")
-        self.__review.append(review)
-        review.user_name = self.__first_name + " " + self.__last_name
+        self.review.append(review)
         review.__updated = datetime.now().strftime("%b/%d/%y %I:%M %p")
-
-    @property
-    def places(self):
-        """Getter for places"""
-        return self.__places
 
     def add_place(self, place):
         """Adds a place to the list of places"""
         if not isinstance(place, Places):
             raise TypeError("place must be an instance of Place")
         self.places.append(place)
-        place.host_id = self.__id
-        place.host_name = self.__first_name + " " + self.__last_name
-        place.__updated = datetime.now().strftime("%b/%d/%y %I:%M %p")
+        self.__updated = datetime.now().strftime("%b/%d/%y %I:%M %p")
 
     @property
     def id(self):
@@ -128,27 +115,16 @@ class User:
         self.__password = password
         self.__updated = datetime.now().strftime("%b/%d/%y %I:%M %p")
 
-    @classmethod
-    def create(cls, first_name, last_name, email, password):
-        """Creates a new user"""
-        new_user = cls(first_name, last_name, email, password)
-        cls.DataManager.save(new_user)
-        return new_user
-
-    @classmethod
-    def get(cls, user_id):
-        """Gets a user by id"""
-        cls.DataManager.get(user_id, "User")
-
-    def update(self):
-        """Updates a user"""
-        self.DataManager.update(self)
-
-    def delete(self):
-        """Deletes a user"""
-        self.DataManager.delete(self.id, "User")
-
-    @classmethod
-    def all(cls):
-        """Returns all users"""
-        return cls.DataManager.all("User")
+    def to_dict(self):
+        """Returns a dictionary representation of a user"""
+        return {
+            "id": self.id,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "email": self.email,
+            "password":  self.password,
+            "created_at": self.created,
+            "updated_at": self.updated,
+            "places": [place.to_dict() for place in self.places],
+            "reviews": [review.to_dict() for review in self.review],
+        }

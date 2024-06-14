@@ -25,32 +25,31 @@ class Places:
         self.__updated_at = self.__created_at
         self.__id = str(uuid.uuid4())
         self.__host_id = None
-        self.__host_name = None
-        self.__amenities = []
-        self.__reviews = []
+        self.amenities = []
+        self.reviews = []
 
     @property
     def review(self):
         """Getter for review"""
-        return self.__reviews
+        return self.reviews
 
     def add_review(self, review):
         """Add a review to the list of reviews"""
         if not isinstance(review, Review):
             raise TypeError("review must be an instance of Review")
-        self.__reviews.append(review)
+        self.reviews.append(review)
         self.__updated_at = datetime.now().strftime("%b/%d/%y %I:%M %p")
 
     @property
     def amenities(self):
         """Getter for amenities"""
-        return self.__amenities
+        return self.amenities
 
     def add_amenity(self, amenity):
         """Add an amenity to the list of amenities"""
         if not isinstance(amenity, Amenity):
             raise TypeError("amenity must be an instance of Amenity")
-        self.__amenities.append(amenity)
+        self.amenities.append(amenity)
         self.__updated_at = datetime.now().strftime("%b/%d/%y %I:%M %p")
 
     @property
@@ -238,31 +237,6 @@ class Places:
         self.__max_guests = max_guests
         self.__updated_at = datetime.now().strftime("%b/%d/%y %I:%M %p")
 
-    @classmethod
-    def create(cls, name, description, location):
-        """Create a new place"""
-        place = cls(name, description, location)
-        cls.DataManager.save(place)
-        return place
-
-    @classmethod
-    def get(cls, place_id):
-        """Get a specific place"""
-        return cls.DataManager.get(place_id, "Place")
-
-    def update(self):
-        """Update place data"""
-        self.DataManager.update(self)
-
-    def delete(self):
-        """Delete place data"""
-        self.DataManager.delete(self.id, "Place")
-
-    @classmethod
-    def all(cls):
-        """Get all places"""
-        return cls.DataManager.all("Place")
-
     def to_dict(self):
         """Convert place to dictionary"""
         return {
@@ -277,8 +251,8 @@ class Places:
             "price_by_night": self.__price,
             "latitude": self.__latitude,
             "longitude": self.__longitude,
-            "amenity_ids": [amenity.to_dict() for amenity in self.__amenities],
+            "amenities": [amenity.to_dict() for amenity in self.amenities],
             "user_id": self.__host_id,
             "city_id": self.__city_id,
-            "reviews": [review.to_dict() for review in self.__reviews]
+            "reviews": [review.to_dict() for review in self.reviews]
         }
