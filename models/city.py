@@ -5,7 +5,7 @@ import uuid
 from persistence.DataManager import DataManager
 
 
-class City:
+class City(DataManager):
     """City class"""
     DataManager = DataManager
 

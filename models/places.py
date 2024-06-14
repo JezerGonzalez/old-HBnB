@@ -6,7 +6,7 @@ from .class_reviews import Review
 from persistence.DataManager import DataManager
 
 
-class Places:
+class Places(DataManager):
     """Class that defines a list of Places for HBnB"""
 
     def __init__(self, name, description, address, latitude,

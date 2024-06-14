@@ -5,7 +5,7 @@ from datetime import datetime
 from persistence.DataManager import DataManager
 
 
-class Amenity:
+class Amenity(DataManager):
     """"Amenity class"""
     def __init__(self, name, id=None):
         """Init method"""
