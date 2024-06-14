@@ -1,32 +1,42 @@
 from flask import Flask, jsonify, abort
-from class_country import Country
-
-app = Flask(__name__)
+from class_country import Country, City
 
 
-places = [
-    {'id': 1, 'name': 'Place A', 'country_code': 'US', 'description': 'Description of Place A'},
-    {'id': 2, 'name': 'Place B', 'country_code': 'CA', 'description': 'Description of Place B'}
-]
+app = Flask('city_country')
 
-
-@app.route('/places', methods=['GET'])
-def get_all_places():
-    return jsonify({'places': places})
-
-
-@app.route('/places/<int:place_id>', methods=['GET'])
-def get_place_by_id(place_id):
-    place = next((p for p in places if p['id'] == place_id), None)
-    if place is None:
-        abort(404, description="Place not found.")
-    return jsonify({'place': place})
-
+countries = Country.get_all_countries()
+cities = City.get_all_cities()
 
 @app.route('/countries', methods=['GET'])
-def get_countries():
-    countries = Country.get_all_countries()
+def get_all_countries():
+    """Endpoint para obtener todos los países."""
     return jsonify({'countries': countries})
+
+
+@app.route('/countries/<string:country_code>', methods=['GET'])
+def get_country_by_code(country_code):
+    """Endpoint para obtener un país por su código de país."""
+    country = next((c for c in countries if c['code'] == country_code), None)
+    if country is None:
+        abort(404, description="Country not found.")
+    return jsonify({'country': country})
+
+
+@app.route('/countries/<string:country_code>/cities', methods=['GET'])
+def get_cities_by_country(country_code):
+    """Endpoint para obtener todas las ciudades de un país específico por su código de país."""
+    country_cities = [city for city in cities if city['country_code'] == country_code]
+    return jsonify({'cities': country_cities})
+
+
+@app.route('/cities/<int:city_id>', methods=['GET'])
+def get_city_by_id(city_id):
+    """Endpoint para obtener una ciudad por su ID de ciudad."""
+    city = next((city for city in cities if city['id'] == city_id), None)
+    if city is None:
+        abort(404, description="City not found.")
+    return jsonify({'city': city})
+
 
 if __name__ == '__main__':
     app.run(debug=True)
