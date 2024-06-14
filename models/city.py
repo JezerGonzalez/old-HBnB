@@ -20,12 +20,12 @@ class City(DataManager):
     @property
     def country_code(self):
         """Return country"""
-        return self.__counytry_code
+        return self.__country_code
 
     @country_code.setter
     def country_code(self, value):
         """Set country"""
-        self.__counytry_code = value
+        self.__country_code = value
         self.__updated_at = datetime.now().strftime("%b/%d/%y %I:%M %p")
 
     @property
@@ -92,5 +92,5 @@ class City(DataManager):
             "created_at": self.__created_at,
             "updated_at": self.__updated_at,
             "name": self.__name,
-            "country_id": self.__counytry_code
+            "country_id": self.__country_code
         }
