@@ -12,9 +12,8 @@ class DataManager():
     objects = {}
 
     @classmethod
-    def save(self, entity):
+    def save(self, entity, data_type):
         """save data"""
-        data_type = type(entity).__name__
         if data_type not in self.storage:
             raise ValueError(f"Invalid data type: {data_type}")
         self.objects[entity.id] = entity
