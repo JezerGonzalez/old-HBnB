@@ -277,7 +277,7 @@ class Places:
             "price_by_night": self.__price,
             "latitude": self.__latitude,
             "longitude": self.__longitude,
-            "amenity_ids": [amenity.to_dict() for amenity in self.__amenities],
+            "amenities": [amenity.to_dict() for amenity in self.__amenities],
             "user_id": self.__host_id,
             "city_id": self.__city_id,
             "reviews": [review.to_dict() for review in self.__reviews]

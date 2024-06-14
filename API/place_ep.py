@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request, abort
-from models.places import Place
+from models.places import Places
 from models.class_reviews import Review
 from models.users import User
 from models.amenity import Amenity
@@ -23,7 +23,7 @@ def create_place(self):
     host = User.get(data["host_id"])
     if host not in data:
         abort(400, description=f"User not found")
-    place = Place.create(data["name"], data["description"], data["address"],
+    place = Places.create(data["name"], data["description"], data["address"],
                          data["city_id"], data["latitude"], data["longitude"],
                          data["rooms"], data["bathrooms"], data["price"],
                          data["max_guests"])
@@ -36,7 +36,7 @@ def create_place(self):
 @place_bp.route("/places", methods=["GET"])
 def get_places():
     """get all places"""
-    places = Place.all()
+    places = Places.all()
     if places is None:
         abort(404, description="No places found")
     data = [place.to_dict() for place in places]
@@ -46,18 +46,18 @@ def get_places():
 @place_bp.route("/places/<place_id>", methods=["GET"])
 def get_place(place_id):
     """get a place"""
-    place = Place.get(place_id)
+    place = Places.get(place_id)
     if place is None:
-        abort(404, description="Place not found")
+        abort(404, description="Places not found")
     return jsonify(place.to_dict()), 200
 
 
 @place_bp.route("/places/<place_id>", methods=["PUT"])
 def update_place(place_id):
     """update a place"""
-    place = Place.get(place_id)
+    place = Places.get(place_id)
     if place is None:
-        abort(404, description="Place not found")
+        abort(404, description="Places not found")
     data = request.json
     if data is None:
         abort(400, description="Missing data")
@@ -71,10 +71,10 @@ def update_place(place_id):
 @place_bp.route("/places/<place_id>", methods=["DELETE"])
 def delete_place(place_id):
     """delete a place"""
-    place = Place.get(place_id)
+    place = Places.get(place_id)
     if place is None:
-        abort(404, description="Place not found")
+        abort(404, description="Places not found")
     host = User.get(place.host_id)
     host.places.remove(place)
     place.delete()
-    return "Place deleted", 204
+    return "Places deleted", 204

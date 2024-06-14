@@ -5,7 +5,6 @@ from persistence.DataManager import DataManager
 
 class Review:
     """"Review class"""
-    DataManager = DataManager()
 
     def __init__(self, text, rating, user_id, place_id):
         self.__id = str(uuid.uuid4())  # Genera un ID único
