@@ -1,53 +1,71 @@
-from .Interface import IPersistenceManager
-
-
-class DataManager(IPersistenceManager):
+import json
+class DataManager():
     """DataManager class"""
 
-    def __init__(self):
-        """Initialize DataManager"""
-        self.storage = {
-            "User": {},
-            "City": {},
-            "Amenity": {},
-            "Place": {},
-            "Review": {},
-        }
+    storage = {
+        "User": {},
+        "City": {},
+        "Amenity": {},
+        "Place": {},
+        "Review": {},
+    }
+    objects = {}
 
+    @classmethod
     def save(self, entity):
         """save data"""
         data_type = type(entity).__name__
         if data_type not in self.storage:
             raise ValueError(f"Invalid data type: {data_type}")
-        self.storage[data_type][entity.id] = entity
+        self.objects[entity.id] = entity
+        self.storage[data_type][entity.id] = entity.to_dict()
+        with open("file.json", "w") as f:
+            json.dump(self.storage, f)
 
+
+    @classmethod
     def get(self, entity_id, entity_type):
         """Get the data for a given entity"""
         if entity_type not in self.storage:
             raise ValueError(f"Invalid data type: {entity_type}")
-        return self.storage[entity_type][entity_id]
+        return self.objects[entity_id]
 
-    def update(self, entity):
+    @classmethod
+    def update(self, entity, entity_type):
         """Update the data for a given entity"""
-        data_type = type(entity).__name__
-        if data_type not in self.storage:
-            raise ValueError(f"Invalid data type: {data_type}")
-        if entity.id in self.storage[data_type]:
-            self.storage[data_type][entity.id] = entity
+        if entity_type not in self.storage:
+            raise ValueError(f"Invalid data type: {entity_type}")
+        if entity in self.storage[entity_type]:
+            self.storage[entity_type][entity] = entity
+            self.objects[entity]= entity
         else:
             raise ValueError(f"Entity {entity} does not exist")
 
+    @classmethod
     def delete(self, entity_id, entity_type):
         """Delete a entity from the database"""
         if entity_type not in self.storage:
             raise ValueError(f"Invalid data type: {entity_type}")
         if entity_id in self.storage[entity_type]:
             del self.storage[entity_type][entity_id]
+            with open("file.json", "w", encoding="utf-8") as file:
+                json.dump(self.storage, file)
+                del self.objects[entity_id]
         else:
             raise ValueError(f"Entity {entity_type} does not exist")
 
+    @classmethod
     def all_entities(self, entity_type):
         """Returns a list of all entities"""
         if entity_type not in self.storage:
             raise ValueError(f"Invalid data type: {entity_type}")
         return list(self.storage[entity_type].values())
+
+    @classmethod
+    def reload(self, entity, entity_type):
+        """Retrieve data from storage"""
+        if entity_type not in self.storage:
+            raise ValueError(f"Invalid data type: {entity_type}")
+        if entity not in self.storage[entity_type]:
+            return None
+        return self.storage[entity_type][entity]
