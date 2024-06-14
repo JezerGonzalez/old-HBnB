@@ -17,7 +17,7 @@ def create_user():
     if data["email"] in User.emails:
         abort(400, description="Email already exists")
     user = User(data["first_name"], data["last_name"], data["email"], data["password"])
-    DataManager().save(user)
+    DataManager().save(user, "User")
     return jsonify(user.to_dict()), 201
 
 
@@ -62,5 +62,5 @@ def delete_user(user_id):
     user = User.get(user_id, "User")
     if user is None:
         abort(404, description="User not found")
-    user.delete(user_id, "User")
-    return "Delete successful", 204
+    DataManager().delete(user_id, "User")
+    return jsonify("Delete successful"), 204
