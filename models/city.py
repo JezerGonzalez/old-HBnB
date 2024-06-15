@@ -6,7 +6,6 @@ from persistence.DataManager import DataManager
 
 class City(DataManager):
     """City class"""
-    DataManager = DataManager
 
     def __init__(self, name, country_code):
         """Init method"""
