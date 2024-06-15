@@ -1,0 +1,54 @@
++-------------------+        +-------------------+        +-------------------+        +-------------------+
+|       User        |        |       Place       |        |      Review       |        |      Amenity      |
++-------------------+        +-------------------+        +-------------------+        +-------------------+
+| - id: UUID        |<------1| - id: UUID        |        | - id: UUID        |        | - id: UUID        |
+| - email: String   |        | - name: String    |        | - user_id: UUID   |        | - name: String    |
+| - password: String|        | - description: Str|        | - place_id: UUID  |        | - created_at: DT  |
+| - name: String    |        | - latitude: Float |        | - rating: Integer |        | - updated_at: DT  |
+| - created_at: DT  |        | - longitude: Float|        | - comment: String |        +-------------------+
+| - updated_at: DT  |        | - price_per_night |        | - created_at: DT  |
+|                   |        | - max_guests: Int |        | - updated_at: DT  |
+| + create_user()   |        | - host_id: UUID   |        |                   |
+| + update_user()   |        | - city_id: UUID   |        | + create_review() |
+| + delete_user()   |        | - created_at: DT  |        | + update_review() |
++-------------------+        | - updated_at: DT  |        | + delete_review() |
+                             |                   |        +-------------------+
+                             | + create_place()  |
+                             | + update_place()  |
+                             | + delete_place()  |
+                             | + add_amenity()   |
+                             | + remove_amenity()|
+                             +-------------------+
+                                    ^
+                                    |
+                                    | many-to-one
+                                    |
+                             +-------------------+
+                             |       City        |
+                             +-------------------+
+                             | - id: UUID        |
+                             | - name: String    |
+                             | - country_id: UUID|
+                             | - created_at: DT  |
+                             | - updated_at: DT  |
+                             |                   |
+                             | + create_city()   |
+                             | + update_city()   |
+                             | + delete_city()   |
+                             +-------------------+
+                                    ^
+                                    |
+                                    | many-to-one
+                                    |
+                             +-------------------+
+                             |      Country      |
+                             +-------------------+
+                             | - id: UUID        |
+                             | - name: String    |
+                             | - created_at: DT  |
+                             | - updated_at: DT  |
+                             |                   |
+                             | + create_country()|
+                             | + update_country()|
+                             | + delete_country()|
+                             +-------------------+
