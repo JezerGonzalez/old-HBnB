@@ -45,8 +45,8 @@ def load_objects():
                             from models.users import User
                             obj = User.from_dict(obj_data)
                         elif data_type == "Place":
-                            from models.places import Places
-                            obj = Places.from_dict(obj_data)
+                            from models.places import Place
+                            obj = Place.from_dict(obj_data)
                         elif data_type == "Review":
                             from models.class_reviews import Review
                             obj = Review.from_dict(obj_data)

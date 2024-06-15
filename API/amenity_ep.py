@@ -1,13 +1,12 @@
 from flask import Blueprint, jsonify, request, abort
 from models.amenity import Amenity
-from persistence.DataManager import DataManager
 
 amenity_bp = Blueprint("amenity", __name__)
 
 
 @amenity_bp.route("/amenities", methods=["POST"])
-def create_amenity():
-    """Create a new amenity"""
+def create_ammenity():
+    """Create a new ammenity"""
     data = request.json
     if data is None:
         abort(400, description="No data provided (must be JSON)")
@@ -18,10 +17,10 @@ def create_amenity():
     return jsonify(amenity.to_dict()), 201
 
 
-@amenity_bp.route("/amenities", methods=["GET"])    
-def get_amenities():
-    """Get all amenities"""
-    amenities = Amenity.all_entities("Amenity")
+@amenity_bp.route("/amenities", methods=["GET"])
+def get_ammenities():
+    """Retrieve a list of all amenities"""
+    amenities = Amenity.all("Amenity")
     if amenities is None:
         abort(404, description="No amenities found")
     data = [amenity for amenity in amenities]
@@ -30,26 +29,16 @@ def get_amenities():
 
 @amenity_bp.route("/amenities/<amenity_id>", methods=["GET"])
 def get_amenity(amenity_id):
-    """Get a specific amenity"""
-    amenity = Amenity.get(amenity_id, "Amenity")
+    """Retrieve detailed information about a specific amenity"""
+    amenity = Amenity.reload(amenity_id, "Amenity")
     if amenity is None:
         abort(404, description="Amenity not found")
-    return jsonify(amenity.to_dict()), 200
-
-
-@amenity_bp.route("/amenities/<amenity_id>", methods=["DELETE"])
-def delete_amenity(amenity_id):
-    """Delete a specific amenity"""
-    amenity = Amenity.get(amenity_id, "Amenity")
-    if amenity is None:
-        abort(404, description="Amenity not found")
-    DataManager().delete(amenity_id, "Amenity")
-    return jsonify("Amenity deleted successfully"), 204
+    return jsonify(amenity), 200
 
 
 @amenity_bp.route("/amenities/<amenity_id>", methods=["PUT"])
 def update_amenity(amenity_id):
-    """Update a specific amenity"""
+    """Update an existing amenity"""
     amenity = Amenity.get(amenity_id, "Amenity")
     if amenity is None:
         abort(404, description="Amenity not found")
@@ -60,3 +49,13 @@ def update_amenity(amenity_id):
         amenity.name = data["name"]
     amenity.update(amenity.id, "Amenity", amenity)
     return jsonify(amenity.to_dict()), 201
+
+
+@amenity_bp.route("/amenities/<amenity_id>", methods=["DELETE"])
+def delete_amenity(amenity_id):
+    """Delete an amenity"""
+    amenity = Amenity.get(amenity_id, "Amenity")
+    if amenity is None:
+        abort(404, description="Amenity not found")
+    amenity.delete(amenity.id, "Amenity")
+    return "Amenity deleted", 204

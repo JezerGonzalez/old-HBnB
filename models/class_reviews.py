@@ -3,88 +3,122 @@ from datetime import datetime
 from persistence.DataManager import DataManager
 
 
-class Review(DataManager):
-    """"Review class"""
+class Review:
+    """class that defines a review"""
+    data_manager = DataManager()
 
-    def __init__(self, text, rating, user_id, place_id):
-        self.__id = str(uuid.uuid4())  # Genera un ID único
-        self.__text = text
-        self.__rating = rating
-        self.__place_id = place_id
+    def __init__(self, user_id: str, place_id, comment: str, rating: int):
+        """initialize a review"""
+        self.__id = str(uuid.uuid4())
+        self.__created_at = datetime.now().strftime("%B/%d/%Y %I:%M:%S %p")
+        self.__updated_at = self.__created_at
         self.__user_id = user_id
-        self.__created = datetime.now().strftime("%b/%d/%y %I:%M %p")
-        self.__updated = self.__created
+        self.__place_id = place_id
+        self.__comment = comment
+        self.__rating = rating
 
-    # Getters
     @property
     def id(self):
+        """id getter"""
         return self.__id
 
     @property
-    def created(self):
-        return self.__created
+    def created_at(self):
+        """creation datetime getter"""
+        return self.__created_at
 
     @property
-    def updated(self):
-        return self.__updated
-
-    @property
-    def text(self):
-        return self.__text
-
-    @property
-    def rating(self):
-        return self.__rating
-
-    @property
-    def place_id(self):
-        return self.__place_id
+    def updated_at(self):
+        """last update datetime getter"""
+        return self.__updated_at
 
     @property
     def user_id(self):
+        """user id getter"""
         return self.__user_id
 
+    @property
+    def place_id(self):
+        """place id getter"""
+        return self.__place_id
+
+    @property
+    def comment(self):
+        """comment getter"""
+        return self.__comment
+
+    @comment.setter
+    def comment(self, comment: str):
+        """comment setter"""
+        if type(comment) is not str:
+            raise TypeError("comment must be a valid string")
+        if not comment or len(comment.strip()) == 0:
+            raise ValueError("comment cannot be empty")
+        self.__updated_at = datetime.now().strftime("%B/%d/%Y %I:%M:%S %p")
+
+    @property
+    def rating(self):
+        """rating getter"""
+        return self.__rating
+
     @rating.setter
-    def rating(self, value):
-        if type(value) is not int:
+    def rating(self, rating: int):
+        """rating setter"""
+        if type(rating) is not int:
             raise TypeError("rating must be an integer")
-        if value < 0 or value > 5:
-            raise ValueError("rating must be between 0 and 5")
-        self.__rating = value
-        self.__updated = datetime.now().strftime("%b/%d/%y %I:%M %p")
-
-    @text.setter
-    def text(self, value):
-        if type(value) is not str:
-            raise TypeError("text must be a string")
-        if len(value) == 0:
-            raise ValueError("text cannot be empty")
-        self.__text = value
-        self.__updated = datetime.now().strftime("%b/%d/%y %I:%M %p")
-
-    def to_dict(self):
-        """Returns a dictionary representation of a review"""
-        return {
-            "id": self.id,
-            "user_id": self.user_id,
-            "place_id": self.place_id,
-            "text": self.text,
-            "rating": self.rating,
-            "created_at": self.created,
-            "updated_at": self.updated,
-        }
+        if rating < 1 or rating > 5:
+            raise ValueError("rating must be between 1 and 5")
+        self.__updated_at = datetime.now().strftime("%B/%d/%Y %I:%M:%S %p")
 
     @classmethod
-    def from_dict(cls, data):
-        """Create a Review object from a dictionary."""
-        review = cls(
-            user_id=data['user_id'],
-            place_id=data['place_id'],
-            comment=data['comment'],
-            rating=int(data['rating'])
-        )
-        review.__id = data['id']
-        review.__created = data['created_at']
-        review.__updated = data['updated_at']
-
+    def create(cls, user_id, place_id, rating, comment):
+        """create new review"""
+        review = cls(user_id, place_id, rating, comment)
+        cls.data_manager.save(review.id, "Review", review.to_dict())
         return review
+
+    @classmethod
+    def get(cls, review_id):
+        """get review by id"""
+        return cls.data_manager.get(review_id, "Review")
+
+    def update(self):
+        """update review data"""
+        self.data_manager.update(self.id, "Review", self.to_dict())
+
+    def delete(self):
+        """delete review data"""
+        self.data_manager.delete(self.id, "Review")
+
+    @classmethod
+    def all(cls):
+        """Retrieve all users"""
+        return cls.data_manager.all("Review")
+
+    def to_dict(self):
+        """convert review to dict"""
+        return {
+            "id": self.__id,
+            "created_at": self.__created_at,
+            "updated_at": self.__updated_at,
+            "user_id": self.__user_id,
+            "place_id": self.__place_id,
+            "comment": self.__comment,
+            "rating": self.__rating,
+        }
+
+
+@classmethod
+def from_dict(cls, data):
+    """Create a Review object from a dictionary."""
+    review = cls(
+        user_id=data['user_id'],
+        place_id=data['place_id'],
+        comment=data['comment'],
+        rating=int(data['rating'])
+    )
+    review.__id = data['id']
+    review.__created_at = data['created_at']
+    review.__updated_at = data['updated_at']
+
+    return review

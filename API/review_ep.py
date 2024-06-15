@@ -1,8 +1,7 @@
 from flask import Blueprint, jsonify, request, abort
 from models.class_reviews import Review
-from models.places import Places
+from models.places import Place
 from models.users import User
-from persistence.DataManager import DataManager
 
 
 review_bp = Blueprint("review", __name__)
@@ -10,14 +9,14 @@ review_bp = Blueprint("review", __name__)
 
 @review_bp.route("/places/<place_id>/reviews", methods=["POST"])
 def create_review(place_id):
-    """Creates a new review"""
-    place = DataManager().get(place_id, "Place")
+    """Create a new review for a specified place"""
+    place = Place.get(place_id, "Place")
     if place is None:
-        abort(404, description="Places not found")
+        abort(404, description="Place not found")
     data = request.json
     if data is None:
-        abort(400, description="Missing data")
-    fields = ["user_id", "rating", "review"]
+        abort(400, description="No data provided (must be JSON)")
+    fields = ["user_id", "rating", "comment"]
     for field in fields:
         if field not in data:
             abort(400, description=f"Missing {field}")
@@ -25,56 +24,56 @@ def create_review(place_id):
     if user is None:
         abort(404, description="User not found")
     if user.id == place.host_id:
-        abort(400, description="Host cannot review their own place")
-    review = Review(data["user_id"], place_id, data["text"],
-                    data["rating"])
-    Places().add_review(review)
-    User().add_review(review)
+        abort(400, description="Host user cannot review their own place")
+    review = Review(data["user_id"], place_id,
+                    data["rating"], data["comment"])
+    place.add_review(review)
+    user.add_review(review)
     review.save(review.id, "Review", review)
     return jsonify(review.to_dict()), 201
 
 
-@review_bp.route("/reviews/<review_id>", methods=["GET"])
+@review_bp.route("/review/<review_id>", methods=["GET"])
 def get_review(review_id):
-    """Gets a review by id"""
+    """Retrieve detailed information about a specific review"""
     review = Review.reload(review_id, "Review")
     if review is None:
         abort(404, description="Review not found")
     return jsonify(review), 200
 
 
-@review_bp.route("/reviews/<review_id>", methods=["PUT"])
+@review_bp.route("/review/<review_id>", methods=["PUT"])
 def update_review(review_id):
-    """Update a review"""
+    """Update an existing review"""
     review = Review.get(review_id, "Place")
     if review is None:
         abort(404, description="Review not found")
-    comment = request.json["review"]
+    comment = request.json["comment"]
     rating = request.json["rating"]
     review.comment = comment
     review.rating = rating
-    DataManager().update(review.id, "Review", review)
-    return jsonify(review.to_dict), 201
+    review.update(review.id, "Review", review)
+    return jsonify(review.to_dict()), 201
 
 
 @review_bp.route("/review/<review_id>", methods=["DELETE"])
 def delete_review(review_id):
-    """Deletes a review"""
+    """Delete a review"""
     review = Review.get(review_id, "Review")
     if review is None:
         abort(404, description="Review not found")
-    DataManager().delete(review.id, "Review")
-    return "Review successfuly deleted", 204
+    review.delete(review.id, "Review")
+    return "Review deleted", 204
 
 
 @review_bp.route("/places/<place_id>/reviews", methods=["GET"])
 def get_place_reviews(place_id):
     """Retrieve all reviews for a specific place"""
-    place = Places.get(place_id, "Place")
+    place = Place.get(place_id, "Place")
     if place is None:
-        abort(404, description="Places not found")
+        abort(404, description="Place not found")
     if place.reviews is None:
-        abort(404, description="Places has no reviews")
+        abort(404, description="Place has no reviews")
     place_reviews = [review.to_dict() for review in place.reviews]
     return jsonify(place_reviews), 200
 
