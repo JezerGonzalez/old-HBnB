@@ -1,96 +1,68 @@
-from flask import Blueprint, jsonify, request, abort
-from models.class_country import Country
-from models.city import City
+"""Creating class city"""
+from datetime import datetime
+import uuid
+from persistence.DataManager import DataManager
 
 
-cc_bp = Blueprint("cc", __name__)
+class City(DataManager):
+    """City class"""
+    DataManager = DataManager
 
+    def __init__(self, name, country_code):
+        """Init method"""
+        self.name = name
+        self.__id = str(uuid.uuid4())
+        self.__created_at = datetime.now().strftime("%b/%d/%y %I:%M %p")
+        self.__updated_at = self.__created_at
+        self.__country_code = country_code
 
-@cc_bp.route("/countries", methods=["GET"])
-def get_countries():
-    """Retrieve all pre-loaded countries"""
-    countries = Country.all()
-    return jsonify(countries), 200
+    @property
+    def country_code(self):
+        """Return country"""
+        return self.__country_code
 
+    @country_code.setter
+    def country_code(self, value):
+        """Set country"""
+        self.__country_code = value
+        self.__updated_at = datetime.now().strftime("%b/%d/%y %I:%M %p")
 
-@cc_bp.route("/countries/<country_code>", methods=["GET"])
-def get_country(country_code):
-    """Retrieve details of a specific country by its code"""
-    country = Country.get(country_code)
-    if country is None:
-        abort(404, description="Country not found")
-    return jsonify(country), 200
+    @property
+    def id(self):
+        """Return id"""
+        return self.__id
 
+    @property
+    def created_at(self):
+        """Return created_at"""
+        return self.__created_at
 
-@cc_bp.route("/countries/<country_code>/cities", methods=["GET"])
-def get_cities_in_country(country_code):
-    """Retrieve all cities belonging to a specific country"""
-    country = Country.get(country_code)
-    if not country:
-        abort(404, description="Country not found")
-    cities = [city.to_dict() for city in City.all()
-              if city.country_code == country_code]
-    return jsonify(cities), 200
+    @property
+    def updated_at(self):
+        """Return updated_at"""
+        return self.__updated_at
 
+    @property
+    def name(self):
+        """Return name"""
+        return self.__name
 
-@cc_bp.route("/cities", methods=["POST"])
-def create_city():
-    """Create a new city"""
-    data = request.json
-    if data is None:
-        abort(400, description="No data provided (must be JSON)")
-    fields = ["name", "country_code"]
-    for field in fields:
-        if field not in data:
-            abort(400, description=f"Missing {field}")
-    city = City(data["name"], data["country_code"])
-    city.save(city.id, "City", city)
-    return jsonify(city.to_dict()), 200
+    @name.setter
+    def name(self, value):
+        """Set name"""
+        self.__name = value
+        if not isinstance(value, str):
+            raise TypeError("name must be a string")
+        if not value:
+            raise ValueError("name can't be empty")
+        self.__updated_at = datetime.now().strftime("%b/%d/%y %I:%M %p")
 
-
-@cc_bp.route("/cities", methods=["GET"])
-def get_cities():
-    """Retrieve all cities"""
-    cities = City.all("City")
-    if cities is None:
-        abort(404, description="No cities found")
-    cities_data = [city for city in cities]
-    if cities_data is None:
-        abort(404, description="No cities found")
-    return jsonify(cities_data), 200
-
-
-@cc_bp.route("/cities/<city_id>", methods=["GET"])
-def get_city(city_id):
-    """Retrieve details of a specific city"""
-    city = City.reload(city_id, "City")
-    if city is None:
-        abort(404, description="City not found")
-    return jsonify(city), 200
-
-
-@cc_bp.route("/cities/<city_id>", methods=["PUT"])
-def update_city(city_id):
-    """Update an existing city"""
-    city = City.get(city_id, "City")
-    if city is None:
-        abort(400, description="City not found")
-    data = request.json
-    if data is None:
-        abort(400, description="No data provided (must be JSON)")
-    if "name" in data:
-        city.name = data["name"]
-    if "country_code" in data:
-        city.country_code = data["country_code"]
-    city.update(city.id, "City", city)
-    return jsonify(city.to_dict()), 201
-
-
-@cc_bp.route("/cities/<city_id>", methods=["DELETE"])
-def delete_city(city_id):
-    """Delete a city"""
-    city = City.get(city_id, "City")
-    if city is None:
-        abort(400, description="City not found")
-    city.delete(city.id, "City")
-    return "City deleted", 204
+    def to_dict(self):
+        """Return a dictionary representation of a city"""
+        return {
+            "id": self.__id,
+            "created_at": self.__created_at,
+            "updated_at": self.__updated_at,
+            "name": self.__name,
+            "country_id": self.__country_code
+        }
