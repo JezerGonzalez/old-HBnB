@@ -14,7 +14,7 @@ def create_amenity():
     if "name" not in data:
         abort(400, description="Missing name")
     amenity = Amenity(data["name"])
-    amenity.save(amenity, "Amenity")
+    amenity.save(amenity.id, "Amenity", amenity)
     return jsonify(amenity.to_dict()), 201
 
 
@@ -44,7 +44,7 @@ def delete_amenity(amenity_id):
     if amenity is None:
         abort(404, description="Amenity not found")
     DataManager().delete(amenity_id, "Amenity")
-    return jsonify("Amenity deleted successfully"), 201
+    return jsonify("Amenity deleted successfully"), 204
 
 
 @amenity_bp.route("/amenities/<amenity_id>", methods=["PUT"])
@@ -56,8 +56,7 @@ def update_amenity(amenity_id):
     data = request.json
     if data is None:
         abort(400, description="No data provided (must be JSON)")
-    if "name" not in data:
-        abort(400, description="Missing name")
-    amenity.name = data["name"]
-    amenity.update()
-    return jsonify(amenity.to_dict()), 200
+    if "name" in data:
+        amenity.name = data["name"]
+    amenity.update(amenity.id, "Amenity", amenity)
+    return jsonify(amenity.to_dict()), 201

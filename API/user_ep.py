@@ -17,7 +17,7 @@ def create_user():
     if data["email"] in User.emails:
         abort(400, description="Email already exists")
     user = User(data["first_name"], data["last_name"], data["email"], data["password"])
-    DataManager().save(user, "User")
+    user.save(user.id, "User", user)
     return jsonify(user.to_dict()), 201
 
 
@@ -52,7 +52,7 @@ def update_user(user_id):
     for key, value in data.items():
         if key in data and key is not user_id:
             setattr(user, key, value)
-    user.update(user_id, "User")
+    user.update(user.id, "User", user)
     return jsonify(user.to_dict()), 201
 
 

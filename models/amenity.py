@@ -52,3 +52,15 @@ class Amenity(DataManager):
             "updated_at": self.__updated_at,
             "name": self.__name,
         }
+
+    @classmethod
+    def from_dict(cls, data):
+        """Create an Amenity object from a dictionary."""
+        amenity = cls(
+            name=data['name']
+        )
+        amenity.__id = data['id']
+        amenity.__created_at = data['created_at']
+        amenity.__updated_at = data['updated_at']
+
+        return amenity

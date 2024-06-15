@@ -12,7 +12,7 @@ def create_place():
     data = request.json
     if data is None:
         abort(400, description="Missing data")
-    fields = ["name", "description", "longitute", "latitude", "address",
+    fields = ["name", "description", "longitude", "latitude", "address",
               "price", "city_id", "max_guests", "rooms", "bathrooms",
               "amenities", "host_id"]
     for field in fields:
@@ -26,14 +26,13 @@ def create_place():
                     data["rooms"], data["bathrooms"], data["price"],
                     data["max_guests"])
     place.host_id = data["host_id"]
-
     for amenity in data["amenity"]:
         try:
             place.add_amenity(amenity)
         except:
             abort(400, description="Failed to add amenity")
-        User().add_place(place)
-        DataManager().save(place.id)
+        host.add_place(place)
+        place.save(place.id, "Place", place)
     return jsonify(place.to_dict()), 201
 
 
@@ -68,7 +67,7 @@ def update_place(place_id):
     for key, value in data.items():
         if key in data and key is not place_id:
             setattr(place, key, value)
-    DataManager().save(place_id, "Place")
+    DataManager().save(place.id, "Place", place)
     return jsonify(place.to_dict()), 201
 
 

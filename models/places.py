@@ -251,8 +251,36 @@ class Places(DataManager):
             "price_by_night": self.__price,
             "latitude": self.__latitude,
             "longitude": self.__longitude,
-            "amenities": [amenity.to_dict() for amenity in self.amenities],
+            "amenities": [Amenity.to_dict() for amenity in self.amenities],
             "user_id": self.__host_id,
             "city_id": self.__city_id,
-            "reviews": [review.to_dict() for review in self.reviews]
+            "reviews": [Review.to_dict() for review in self.reviews]
         }
+
+    @classmethod
+    def from_dict(cls, data):
+        """Create a Place object from a dictionary."""
+        place = cls(
+            name=data['name'],
+            description=data['description'],
+            address=data['address'],
+            latitude=float(data['latitude']),
+            longitude=float(data['longitude']),
+            city_id=data['city_id'],
+            rooms=int(data['rooms']),
+            bathrooms=int(data['bathrooms']),
+            price=int(data['price']),
+            max_guests=int(data['max_guests'])
+        )
+        place.__id = data['id']
+        place.__created_at = data['created_at']
+        place.__updated_at = data['updated_at']
+        place.__host_id = data['host_id']
+
+        place.amenities = [Amenity.from_dict(amenity_data)
+                        for amenity_data in data.get('amenities', [])]
+
+        place.reviews = [Review.from_dict(review_data)
+                        for review_data in data.get('reviews', [])]
+
+        return place

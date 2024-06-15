@@ -26,12 +26,12 @@ def create_review(place_id):
         abort(404, description="User not found")
     if user.id == place.host_id:
         abort(400, description="Host cannot review their own place")
-    review = Review.create(data["user_id"], place_id, data["text"],
-                           data["rating"])
+    review = Review(data["user_id"], place_id, data["text"],
+                    data["rating"])
     Places().add_review(review)
     User().add_review(review)
-    DataManager().save(review.id, "Review")
-    return jsonify(Review.to_dict()), 201
+    review.save(review.id, "Review", review)
+    return jsonify(review.to_dict()), 201
 
 
 @review_bp.route("/reviews/<review_id>", methods=["GET"])
@@ -53,7 +53,7 @@ def update_review(review_id):
     rating = request.json["rating"]
     review.comment = comment
     review.rating = rating
-    DataManager().update(review.id, "Review")
+    DataManager().update(review.id, "Review", review)
     return jsonify(review.to_dict), 201
 
 

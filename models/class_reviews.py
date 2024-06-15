@@ -73,3 +73,18 @@ class Review(DataManager):
             "created_at": self.created,
             "updated_at": self.updated,
         }
+
+    @classmethod
+    def from_dict(cls, data):
+        """Create a Review object from a dictionary."""
+        review = cls(
+            user_id=data['user_id'],
+            place_id=data['place_id'],
+            comment=data['comment'],
+            rating=int(data['rating'])
+        )
+        review.__id = data['id']
+        review.__created = data['created_at']
+        review.__updated = data['updated_at']
+
+        return review

@@ -1,7 +1,6 @@
 from flask import Blueprint, jsonify, abort, request
 from models.class_country import Country
 from models.city import City
-from persistence.DataManager import DataManager
 
 city_country_bp = Blueprint('city_country', __name__)
 
@@ -28,9 +27,9 @@ def get_cities_by_country(country_code):
     country = Country.get(country_code)
     if country is None:
         abort(404, description="Country not found.")
-    country_cities = [city.to_dict() for city in City.all() 
+    cities = [city.to_dict() for city in City.all() 
                       if city.country_code == country_code]
-    return jsonify(country_cities), 200
+    return jsonify(cities), 200
 
 
 @city_country_bp.route('/cities', methods=['POST'])
@@ -44,13 +43,13 @@ def create_city():
         if field not in data:
             abort(400, description=f"Missing {field}.")
     city = City(data["name"], data["country_code"])
-    city.save(city, "City")
+    city.save(city.id, "City", city)
     return jsonify(city.to_dict()), 200
 
 @city_country_bp.route('/cities', methods=['GET'])
 def get_all_cities():
     """Endpoint para obtener todas las ciudades."""
-    cities = DataManager().all_entities("City")
+    cities = City.all_entities("City")
     if cities is None:
         abort(404, description="Cities not found.")
     cities_data = [city for city in cities]
@@ -71,7 +70,7 @@ def get_city_by_id(city_id):
 @city_country_bp.route('/cities/<city_id>', methods=['PUT'])
 def update_city(city_id):
     """Endpoint para actualizar la información de una ciudad existente."""
-    city = DataManager().get(city_id, "City")
+    city = City.get(city_id, "City")
     if city is None:
         abort(404, description="City not found.")
     data = request.json
@@ -81,15 +80,15 @@ def update_city(city_id):
         city.name = data["name"]
     if "country_code" in data:
         city.country_code = data["country_code"]
-    DataManager().update(city.id, "City")
+    city.update(city.id, "City", city)
     return jsonify(city.to_dict()), 201
 
 
 @city_country_bp.route('/cities/<city_id>', methods=['DELETE'])
 def delete_city(city_id):
     """Endpoint para eliminar una ciudad específica."""
-    city = DataManager().get(city_id, "City")
+    city = City.get(city_id, "City")
     if city is None:
         abort(404, description="City not found.")
-    DataManager().delete(city_id, "City")
+    city.delete(city_id, "City")
     return jsonify('City deleted successfully'), 200

@@ -15,8 +15,6 @@ class User(DataManager):
 
         self.__first_name = first_name
         self.__last_name = last_name
-        if email in User.emails:
-            raise ValueError(f"email {email} already exists")
         User.emails.append(email)
         self.__email = email
         self.__password = password
@@ -128,3 +126,24 @@ class User(DataManager):
             "places": [place.to_dict() for place in self.places],
             "reviews": [review.to_dict() for review in self.review],
         }
+
+    @classmethod
+    def from_dict(cls, data):
+        """Create a User object from a dictionary."""
+        user = cls(
+            first_name=data['first_name'],
+            last_name=data['last_name'],
+            email=data['email'],
+            password=data['password']
+        )
+        user.__id = data['id']
+        user.__created = data['created_at']
+        user.__updated = data['updated_at']
+
+        user.places = [Places.from_dict(place_data)
+                        for place_data in data.get('places', [])]
+
+        user.review = [Review.from_dict(review_data)
+                        for review_data in data.get('reviews', [])]
+
+        return user
